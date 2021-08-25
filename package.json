@@ -1,0 +1,15 @@
+{
+  "name": "space-finder-backend-cdk",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/sumgwork/space-finder-backend-cdk.git",
+  "author": "Sumit Govil <sumg.work@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-cdk": "^1.119.0",
+    "aws-cdk-lib": "^2.0.0-rc.19",
+    "constructs": "^3.3.132",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.3.5"
+  }
+}
