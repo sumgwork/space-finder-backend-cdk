@@ -8,6 +8,8 @@ import { v4 } from "uuid";
 
 const dbClient = new DynamoDB.DocumentClient();
 
+const TABLE_NAME = process.env.TABLE_NAME;
+
 async function handler(
   event: APIGatewayProxyEvent,
   context: Context
@@ -24,7 +26,7 @@ async function handler(
   try {
     await dbClient
       .put({
-        TableName: "spacesTable",
+        TableName: TABLE_NAME!,
         Item: item,
       })
       .promise();

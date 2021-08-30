@@ -3,7 +3,7 @@ import { handler } from "../../services/SpacesTable/Create";
 
 const event = {
   body: {
-    location: "Sydney",
+    location: "Paris",
   },
 };
 
