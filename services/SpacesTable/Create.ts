@@ -12,7 +12,7 @@ const TABLE_NAME = process.env.TABLE_NAME;
 
 async function handler(
   event: APIGatewayProxyEvent,
-  context: Context
+  _context: Context
 ): Promise<APIGatewayProxyResult> {
   const result: APIGatewayProxyResult = {
     statusCode: 200,

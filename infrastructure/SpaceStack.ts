@@ -5,13 +5,15 @@ import { join } from "path";
 import { GenericTable } from "./GenericTable";
 import { NodejsFunction } from "aws-cdk-lib/lib/aws-lambda-nodejs";
 import { PolicyStatement } from "aws-cdk-lib/lib/aws-iam";
+import { SPACES_TABLE_NAME } from "../constants";
 
 export class SpaceStack extends Stack {
   private api = new RestApi(this, "spaceApi");
   private spacesTable = new GenericTable(this, {
     primaryKey: "spaceId",
-    tableName: "SpacesTable",
+    tableName: SPACES_TABLE_NAME,
     createLambdaPath: "Create",
+    readLambdaPath: "Read",
   });
 
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -39,5 +41,6 @@ export class SpaceStack extends Stack {
     // Spaces API integration
     const spaceResource = this.api.root.addResource("spaces");
     spaceResource.addMethod("POST", this.spacesTable.createLambdaIntegration);
+    spaceResource.addMethod("GET", this.spacesTable.readLambdaIntegration);
   }
 }
