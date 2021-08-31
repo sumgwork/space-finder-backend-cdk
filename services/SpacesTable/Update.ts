@@ -4,6 +4,7 @@ import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
 } from "aws-lambda";
+import { getEventBody } from "../shared/utils";
 
 const dbClient = new DynamoDB.DocumentClient();
 
@@ -19,8 +20,7 @@ async function handler(
     body: "",
   };
 
-  const requestBody =
-    typeof event.body === "object" ? event.body : JSON.parse(event.body);
+  const requestBody = getEventBody(event);
   const spaceId = event.queryStringParameters?.[PRIMARY_KEY!];
 
   try {
@@ -46,6 +46,7 @@ async function handler(
       result.body = JSON.stringify(updateResult);
     }
   } catch (error) {
+    result.statusCode = 400;
     result.body = error.message;
   }
 

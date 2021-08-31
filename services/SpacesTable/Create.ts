@@ -4,7 +4,11 @@ import {
   APIGatewayProxyEvent,
   APIGatewayProxyResult,
 } from "aws-lambda";
-import { v4 } from "uuid";
+import {
+  MissingFieldError,
+  validateAsSpaceEntry,
+} from "../shared/inputValidator";
+import { generateRandomId } from "../shared/utils";
 
 const dbClient = new DynamoDB.DocumentClient();
 
@@ -19,21 +23,27 @@ async function handler(
     body: "",
   };
 
-  const item =
-    typeof event.body === "object" ? event.body : JSON.parse(event.body);
-  item.spaceId = v4();
-
   try {
+    const item = getEventBody(event);
+    item.spaceId = generateRandomId();
+
+    validateAsSpaceEntry(item);
+
     await dbClient
       .put({
         TableName: TABLE_NAME!,
         Item: item,
       })
       .promise();
+    result.body = JSON.stringify(item);
   } catch (error) {
+    if (error instanceof MissingFieldError) {
+      result.statusCode = 400;
+    } else {
+      result.statusCode = 500;
+    }
     result.body = error.message;
   }
-  result.body = JSON.stringify(item);
 
   return result;
 }

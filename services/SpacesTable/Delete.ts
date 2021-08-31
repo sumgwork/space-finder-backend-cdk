@@ -35,6 +35,7 @@ async function handler(
       result.body = JSON.stringify(deleteResult);
     }
   } catch (error) {
+    result.statusCode = 400;
     result.body = error.message;
   }
 
