@@ -9,11 +9,23 @@ GET {{endpoint}}/spaces/
 GET {{endpoint}}/spaces?spaceId=3b001bff-5d97-4ded-a917-9b72e770e70a
 ###
 
+GET {{endpoint}}/spaces?location=London
+###
+
 POST {{endpoint}}/spaces/
 Content-Type: application/json
 
 {
     "location": "New Delhi",
-    "name": "Home"
+    "name": "Study"
+}
+###
+
+PUT {{endpoint}}/spaces?spaceId=3b001bff-5d97-4ded-a917-9b72e770e70a
+Content-Type: application/json
+
+{
+    "location": "London!!!",
+    "name": "Destination"
 }
 ###

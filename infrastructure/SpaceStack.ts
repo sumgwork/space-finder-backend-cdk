@@ -10,8 +10,9 @@ import { SPACES_TABLE_NAME } from "../constants";
 export class SpaceStack extends Stack {
   private api = new RestApi(this, "spaceApi");
   private spacesTable = new GenericTable(this, {
-    primaryKey: "spaceId",
     tableName: SPACES_TABLE_NAME,
+    primaryKey: "spaceId",
+    secondaryIndeces: ["location", "name"],
     createLambdaPath: "Create",
     readLambdaPath: "Read",
   });
