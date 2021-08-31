@@ -6,7 +6,7 @@ GET {{endpoint}}/hello/
 GET {{endpoint}}/spaces/
 ###
 
-GET {{endpoint}}/spaces?spaceId=3b001bff-5d97-4ded-a917-9b72e770e70a
+GET {{endpoint}}/spaces?spaceId=83bb03ca-7ea6-4654-a847-f3d3f3bb6288
 ###
 
 GET {{endpoint}}/spaces?location=London
@@ -16,16 +16,19 @@ POST {{endpoint}}/spaces/
 Content-Type: application/json
 
 {
-    "location": "New Delhi",
-    "name": "Study"
+    "location": "Sydney",
+    "name": "Current"
 }
 ###
 
-PUT {{endpoint}}/spaces?spaceId=3b001bff-5d97-4ded-a917-9b72e770e70a
+PUT {{endpoint}}/spaces?spaceId=83bb03ca-7ea6-4654-a847-f3d3f3bb6288
 Content-Type: application/json
 
 {
     "location": "London!!!",
     "name": "Destination"
 }
+###
+
+DELETE {{endpoint}}/spaces?spaceId=83bb03ca-7ea6-4654-a847-f3d3f3bb6288
 ###
