@@ -1,11 +1,17 @@
 import { Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { LambdaIntegration, RestApi } from "aws-cdk-lib/lib/aws-apigateway";
+import {
+  AuthorizationType,
+  LambdaIntegration,
+  MethodOptions,
+  RestApi,
+} from "aws-cdk-lib/lib/aws-apigateway";
 import { join } from "path";
 import { GenericTable } from "./GenericTable";
 import { NodejsFunction } from "aws-cdk-lib/lib/aws-lambda-nodejs";
 import { PolicyStatement } from "aws-cdk-lib/lib/aws-iam";
 import { SPACES_TABLE_NAME } from "../constants";
+import { AuthorizerWrapper } from "./auth/AuthorizerWrapper";
 
 export class SpaceStack extends Stack {
   private api = new RestApi(this, "spaceApi");
@@ -18,9 +24,12 @@ export class SpaceStack extends Stack {
     updateLambdaPath: "Update",
     deleteLambdaPath: "Delete",
   });
+  private authorizer: AuthorizerWrapper;
 
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
+
+    this.authorizer = new AuthorizerWrapper(this, this.api);
 
     // Lambda function
     const helloLambdaNodejs = new NodejsFunction(this, "helloLambdaNodejs", {
@@ -36,10 +45,21 @@ export class SpaceStack extends Stack {
     // attach this policy to lambda function
     helloLambdaNodejs.addToRolePolicy(s3ListPolicy);
 
+    const optionsWithAuthorizer: MethodOptions = {
+      authorizationType: AuthorizationType.COGNITO,
+      authorizer: {
+        authorizerId: this.authorizer.authorizer.authorizerId,
+      },
+    };
+
     // Hello api lambda integration
     const helloLambdaIntegration = new LambdaIntegration(helloLambdaNodejs);
     const helloLambdaResource = this.api.root.addResource("hello");
-    helloLambdaResource.addMethod("GET", helloLambdaIntegration);
+    helloLambdaResource.addMethod(
+      "GET",
+      helloLambdaIntegration,
+      optionsWithAuthorizer
+    );
 
     // Spaces API integration
     const spaceResource = this.api.root.addResource("spaces");
