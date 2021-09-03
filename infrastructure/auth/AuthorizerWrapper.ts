@@ -9,10 +9,13 @@ import {
   UserPoolClient,
 } from "aws-cdk-lib/lib/aws-cognito";
 import { Construct } from "constructs";
+import { IdentityPoolWrapper } from "./IdentityPoolWrapper";
 
 export class AuthorizerWrapper {
   private userPool: UserPool;
   private userPoolClient: UserPoolClient;
+
+  private identityPool: IdentityPoolWrapper;
 
   public authorizer: CognitoUserPoolsAuthorizer;
 
@@ -24,6 +27,7 @@ export class AuthorizerWrapper {
     this.createUserPool();
     this.addUserPoolClient();
     this.createAuthorizer();
+    this.initializeIdentityPool();
     this.createAdminGroup();
   }
 
@@ -83,5 +87,13 @@ export class AuthorizerWrapper {
       userPoolId: this.userPool.userPoolId,
       // roleArn:
     });
+  }
+
+  private initializeIdentityPool() {
+    this.identityPool = new IdentityPoolWrapper(
+      this.scope,
+      this.userPool,
+      this.userPoolClient
+    );
   }
 }

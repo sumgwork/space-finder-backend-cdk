@@ -1,19 +1,30 @@
 import { AuthService } from "./AuthService";
 import { config } from "./config";
 import * as AWS from "aws-sdk";
-import { CognitoUser } from "amazon-cognito-identity-js";
 
-const authService = new AuthService();
+AWS.config.region = config.REGION;
 
-(async () => {
+async function getBuckets() {
+  let buckets;
+  try {
+    buckets = await new AWS.S3().listBuckets().promise();
+  } catch (error) {
+    buckets = undefined;
+  }
+  return buckets;
+}
+
+async function callStuff() {
+  const authService = new AuthService();
+
   const user = await authService.login(
     config.TEST_USER_NAME,
     config.TEST_USER_PASSWORD
   );
   await authService.getAwsTemporaryCreds(user);
-  const someCredentials = AWS.config.credentials;
-  // console.log(
-  //   "🚀 ~ file: auth.test.ts ~ line 15 ~ someCredentials",
-  //   someCredentials
-  // );
-})();
+  const someCreds = AWS.config.credentials;
+  const buckets = await getBuckets();
+  const a = 5;
+}
+
+callStuff();
